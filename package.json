@@ -2,7 +2,6 @@
   "name": "ventout-backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
@@ -36,7 +35,7 @@
   "author": "Miguel Mattar",
   "license": "ISC",
   "prisma": {
-    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@brazilian-utils/brazilian-utils": "^1.0.0-rc.12",

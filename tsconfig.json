@@ -31,5 +31,7 @@
   "include": [
     "src",
     "tests", 
-    "credit-card.d.ts"  ]
+    "credit-card.d.ts",
+    "prisma"  
+  ]
 }
