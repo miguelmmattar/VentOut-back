@@ -2,7 +2,8 @@
   "name": "ventout-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "ttsc -p tsconfig.build.json",
@@ -50,7 +51,8 @@
     "express-async-errors": "^3.1.1",
     "http-status": "^1.6.2",
     "joi": "^17.7.0",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
