@@ -15,7 +15,7 @@ message: string,
 
 export type LoginParams = {
   email: string,
-  password: string,
+  token: string,
 }
 
 export type RegisterParams = {
@@ -23,6 +23,10 @@ export type RegisterParams = {
   email: string,
   password: string,
   confirmPassword: string,
+};
+
+export type LogoutParams = {
+  userId: number,
 };
 
 export type NewMood = Omit<Moods, "id">

@@ -1,13 +1,15 @@
 // import sessionRepository from "@/repositories/session-repository";
-import userRepository from "@/repositories/user-repository";
-import { User } from "@prisma/client";
+import { notFoundError } from "@/errors";
+import { LoginParams } from "@/protocols";
+import authenticationRepository from "@/repositories/authentication-repository";
+import { Session, User } from "@prisma/client";
 import dayjs from "dayjs";
 import { invalidCredentialsError } from "../errors/invalid-credentials-error";
 
 async function signUp(params: SignUpParams): Promise<SignUpResult> {
   const { email, name } = params;
 
-  checkNewUserOrFail(email);
+  await checkNewUserOrFail(email);
 
   const { id } = await createUser(email, name);
 
@@ -15,47 +17,79 @@ async function signUp(params: SignUpParams): Promise<SignUpResult> {
     id,
     email,
     name,
+  };
+}
+
+async function signIn(params: LoginParams): Promise<SignInResult> {
+  const { email, token } = params;
+
+  const user = await getUserOrFail(email);
+
+  const session = await createSession(user.id, token);
+
+  return {
+    user,
+    token,
+  };
+}
+
+async function signOut(userId: number) {
+  const closedSession = await authenticationRepository.closeSession(userId);
+
+  if(!closedSession) {
+    throw notFoundError();
   }
 }
 
 async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
-    const user = await userRepository.findByEmail(email);
-    if (!user) throw invalidCredentialsError();
+  const user = await authenticationRepository.findByEmail(email);
+  if (!user) throw invalidCredentialsError();
 
-    return user;
+  return user;
 }
 
 async function checkNewUserOrFail(email: string) {
-    const user = await userRepository.findByEmail(email);
+    const user = await authenticationRepository.findByEmail(email);
     if (user) throw invalidCredentialsError();
 }
 
 async function createUser(email: string, name: string) {
-    const newUser = await userRepository.create({
+    const newUser = await authenticationRepository.createUser({
         name,
         email,
         updatedAt: dayjs().toDate(),
-    })
+    });
     return newUser;
 }
 
-export type SignInParams = Pick<User, "email">;
+async function createSession(userId: number, token: string) {
+    const newSession = await authenticationRepository.createSession({
+        userId,
+        token,
+    });
+
+    return newSession;
+}
 
 export type SignUpParams = Pick<User, "email" | "name">;
 
 export type NewUserParams = Pick<User, "email" | "name" | "updatedAt">;
 
+export type NewSessionParams = Pick<Session, "userId" | "token">;
+
 type SignInResult = {
-    user: Pick<User, "id" | "email">;
+    user: Pick<User, "id" | "email" | "name">;
     token: string;
 };
 
 type SignUpResult = Pick<User, "id" | "email" | "name">;
   
-type GetUserOrFailResult = Pick<User, "id" | "email" >;
+type GetUserOrFailResult = Pick<User, "id" | "email" | "name">;
   
  const authenticationService = {
     signUp,
+    signIn,
+    signOut,
 };
   
 export default authenticationService;

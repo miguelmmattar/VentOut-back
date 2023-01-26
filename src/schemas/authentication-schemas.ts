@@ -1,11 +1,16 @@
 import Joi from "joi";
-import { LoginParams, RegisterParams } from "@/protocols";
+import { LoginParams, LogoutParams, RegisterParams } from "@/protocols";
 
 export const signInSchema = Joi.object<LoginParams>({
   email: Joi.string().email().required(),
+  token: Joi.string().required(),
 });
 
 export const signUpSchema = Joi.object<RegisterParams>({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
+});
+
+export const signOutSchema = Joi.object<LogoutParams>({
+  userId: Joi.number().min(1).required(),
 });
