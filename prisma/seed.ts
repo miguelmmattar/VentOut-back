@@ -1,9 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import seeds from "./utils";
+import seeds from "../src/prismaUtils/utils";
 const prisma = new PrismaClient();
 
 async function main() {
   await seeds.seedMoods();
+  await seeds.seedSpots();
+  await seeds.seedSymptoms();
+  await seeds.seedEmotions();
 }
 
 main()

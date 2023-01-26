@@ -6,6 +6,10 @@ import httpStatus from "http-status";
 export async function singInPost(req: Request, res: Response) {
   const { email, token } = req.body as LoginParams;
 
+  if(!email || !token) {
+    return res.status(httpStatus.BAD_REQUEST).send({});
+  }
+
   try {
     const result = await authenticationService.signIn({ email, token });
 

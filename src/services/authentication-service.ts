@@ -1,10 +1,9 @@
-// import sessionRepository from "@/repositories/session-repository";
-import { notFoundError } from "@/errors";
+import dayjs from "dayjs";
+
+import { notFoundError, invalidCredentialsError } from "@/errors";
 import { LoginParams } from "@/protocols";
 import authenticationRepository from "@/repositories/authentication-repository";
 import { Session, User } from "@prisma/client";
-import dayjs from "dayjs";
-import { invalidCredentialsError } from "../errors/invalid-credentials-error";
 
 async function signUp(params: SignUpParams): Promise<SignUpResult> {
   const { email, name } = params;
@@ -25,7 +24,7 @@ async function signIn(params: LoginParams): Promise<SignInResult> {
 
   const user = await getUserOrFail(email);
 
-  const session = await createSession(user.id, token);
+  await createSession(user.id, token);
 
   return {
     user,

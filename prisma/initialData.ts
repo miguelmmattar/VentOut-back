@@ -1,6 +1,7 @@
 import { Spots } from "@prisma/client";
 import { NewEmotion, NewMood, NewSymptom } from "protocols";
-import utils from "./utils";
+import utils from "./generic";
+import generic from "./generic";
 
 const newMoods: NewMood[] = [
     { name: 'Great', color: '#C7FACB' },

@@ -1,5 +1,5 @@
 import { SymptomType, PrismaClient } from "@prisma/client";
-import initialData from "./initialData";
+import initialData from "../src/prismaUtils/initialData";
 const prisma = new PrismaClient();
 
 async function seedMoods() {
@@ -27,6 +27,7 @@ async function seedSpots() {
     const spots = await Promise.all(initialData.newSpots.map(async (item) => (
         await prisma.spots.create({
             data: {
+                id: item.id,
                 name: item.name,
                 color: item.color,
             },
