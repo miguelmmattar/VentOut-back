@@ -29,6 +29,11 @@ export type LogoutParams = {
   userId: number,
 };
 
+export type MoodFilter = {
+  date: Date | string,
+  param: string,
+}
+
 export type NewMood = Omit<Moods, "id">
 
 export type NewEmotion = Omit<Emotions, "id">

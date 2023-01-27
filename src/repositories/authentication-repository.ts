@@ -1,7 +1,9 @@
 import { prisma } from "@/config";
-import { NewSessionParams, NewUserParams } from "@/services/authentication-service";
-import { Prisma, Session } from "@prisma/client";
 import dayjs from "dayjs";
+
+import { Prisma, Session } from "@prisma/client";
+import { NewSessionParams, NewUserParams } from "@/services/authentication-service";
+;
 
 async function findByEmail(email: string) {
   const user: Prisma.UserFindUniqueArgs = {
@@ -39,12 +41,9 @@ async function closeSession(userId: number) {
       return closedSession;
     }
   
-    closedSession = await prisma.session.update({
+    closedSession = await prisma.session.delete({
       where: {
         id: session.id,
-      },
-      data: {
-        closedAt: dayjs().toDate(),
       }
     });
   });

@@ -1,4 +1,5 @@
 import Joi from "joi";
+
 import { LoginParams, LogoutParams, RegisterParams } from "@/protocols";
 
 export const signInSchema = Joi.object<LoginParams>({
@@ -9,8 +10,4 @@ export const signInSchema = Joi.object<LoginParams>({
 export const signUpSchema = Joi.object<RegisterParams>({
   name: Joi.string().min(3).max(60).required(),
   email: Joi.string().email().required(),
-});
-
-export const signOutSchema = Joi.object<LogoutParams>({
-  userId: Joi.number().min(1).required(),
 });

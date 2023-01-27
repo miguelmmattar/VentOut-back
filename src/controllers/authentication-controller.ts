@@ -22,6 +22,10 @@ export async function singInPost(req: Request, res: Response) {
 export async function singUpPost(req: Request, res: Response) {
   const { name, email } = req.body as SignUpParams;
 
+  if(!email || !name) {
+    return res.status(httpStatus.BAD_REQUEST).send({});
+  }
+
   try {
     const result = await authenticationService.signUp({ name, email });
 
@@ -32,7 +36,7 @@ export async function singUpPost(req: Request, res: Response) {
 }
 
 export async function signOutPut(req: Request, res: Response) {
-  const userId = req.body.userId as number;
+  const userId = Number(req.params.userId);
 
   try {
     await authenticationService.signOut(userId);

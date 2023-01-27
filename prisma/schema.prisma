@@ -29,7 +29,7 @@ model Session {
   User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String
   createdAt DateTime  @default(now())
-  closedAt  DateTime? @updatedAt
+  updatedAt DateTime  @updatedAt
 }
 
 model Moods {
