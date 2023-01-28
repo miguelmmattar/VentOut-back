@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-
 import { createOrUpdateMood, getTodaysMood } from "@/controllers";
 import { validateBody } from "@/middlewares";
 import { postMoodSchema } from "@/schemas";

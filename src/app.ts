@@ -12,6 +12,7 @@ import { handleApplicationErrors } from "@/middlewares";
 import {
   authenticationRouter,
   moodRouter,
+  initialDataRouter,
 } from "@/routers";
 
 const app = express();
@@ -21,7 +22,8 @@ app
   .get("/health", (_req, res) => res.send("OK!"))
   .use(handleApplicationErrors)
   .use("/auth", authenticationRouter)
-  .use("/moods", moodRouter);
+  .use("/moods", moodRouter)
+  .use("/initial-data", initialDataRouter);
 
 export function init(): Promise<Express> {
   connectDb();

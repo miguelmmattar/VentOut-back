@@ -1,11 +1,9 @@
-import dayjs from "dayjs";
-
 import { prisma } from "@/config";
 import { invalidDataError } from "@/errors";
 import { MoodFilter } from "@/protocols";
 import { MoodParams } from "@/services/mood-service";
 import { callFilter, filters } from "@/utils/moodUtils";
-import { Prisma, Moods, MyMoods } from "@prisma/client";
+import { MyMoods } from "@prisma/client";
 
 async function findByUserId(userId: number) {
     const userMoods = await prisma.myMoods.findMany({

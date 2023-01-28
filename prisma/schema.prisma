@@ -69,7 +69,7 @@ model Emotions {
 
 model MyEmotions {
   id          Int           @id @default(autoincrement())
-  reportId    Int
+  reportId    Int 
   MyReports   MyReports     @relation(fields: [reportId], references: [id], onDelete: Cascade)
   emtionId    Int
   Emotions    Emotions      @relation(fields: [emtionId], references: [id])
