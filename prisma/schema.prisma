@@ -29,7 +29,6 @@ model Session {
   User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
 }
 
 model Moods {
@@ -53,7 +52,8 @@ model MyReports {
   id          Int            @id @default(autoincrement())
   userId      Int
   User        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date        DateTime 
+  date        DateTime
+  text        String 
   MyEmotions  MyEmotions[]
   MySymptoms  MySymptoms[]
   createdAt   DateTime       @default(now())
@@ -64,15 +64,15 @@ model Emotions {
   id          Int           @id @default(autoincrement())
   name        String
   color       String
-  MyEmotions  MyEmotions[] 
+  MyEmotions  MyEmotions[]  
 }
 
 model MyEmotions {
   id          Int           @id @default(autoincrement())
   reportId    Int 
   MyReports   MyReports     @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  emtionId    Int
-  Emotions    Emotions      @relation(fields: [emtionId], references: [id])
+  emotionId   Int
+  Emotions    Emotions      @relation(fields: [emotionId], references: [id])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }

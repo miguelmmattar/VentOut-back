@@ -27,9 +27,22 @@ async function findAllEmotional() {
     return emtionalSymptoms;
 }
 
+async function createSymptom(symptomId: number, reportId: number): Promise<MySymptoms> {
+    const newSymptom = await prisma.mySymptoms.create({
+        data: {
+            symptomId,
+            reportId,
+            updatedAt: new Date(),
+        }
+    });
+
+    return newSymptom;
+}
+
 const symptomRepository = {
     findAllPhysical,
     findAllEmotional,
+    createSymptom,
 };
 
 export default symptomRepository;

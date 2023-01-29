@@ -4,7 +4,7 @@ import { MoodFilter } from "@/protocols";
 import { MoodParams } from "@/services/mood-service";
 import { callFilter, filters } from "@/utils/moodUtils";
 import { MyMoods } from "@prisma/client";
-
+ 
 async function findByUserId(userId: number) {
     const userMoods = await prisma.myMoods.findMany({
         where: {
@@ -60,8 +60,6 @@ async function upsert(newMood: MoodParams, name: string) {
         });
 
         if(todayMood) {
-            //previousMoodId = todayMood.id;
-
             result = await prisma.myMoods.update({
                 where: {
                     id: todayMood.id,
@@ -80,23 +78,6 @@ async function upsert(newMood: MoodParams, name: string) {
                 }
             });
         }
-
-        
-
-        /* result = await prisma.myMoods.upsert({
-            where: {
-                id: previousMoodId,
-            },
-            create: {
-                userId: newMood.userId,
-                moodId: id,
-                updatedAt: new Date(),
-            },
-            update: {
-                moodId: id,
-                updatedAt: new Date(),
-            } 
-        }); */
     });
     
     return result;

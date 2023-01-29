@@ -36,7 +36,7 @@ export type InitialData = {
 
 export type InitialSymptomData = {
     value: number,
-    name: string,
+    label: string,
     type: SymptomType,
     spotId: number,
     color: string,
@@ -44,7 +44,7 @@ export type InitialSymptomData = {
 
 export type InitialEmotionData = {
     value: number,
-    name: string,
+    label: string,
     color: string,
 };
 

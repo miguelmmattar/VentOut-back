@@ -1,4 +1,4 @@
-import { Emotions, Moods, Spots, Symptoms } from "@prisma/client";
+import { Emotions, Moods, Spots, Symptoms, SymptomType } from "@prisma/client";
 
 export type ApplicationError = {
     name: string;
@@ -39,3 +39,17 @@ export type NewMood = Omit<Moods, "id">
 export type NewEmotion = Omit<Emotions, "id">
 
 export type NewSymptom = Omit<Symptoms, "id" | "type">
+
+export type incomingEmotion = {
+  value: number,
+  label: string,
+  color: string,
+};
+
+export type incomingSymptom = {
+  value: number,
+  label: string,
+  color: string,
+  spotId: number,
+  type: SymptomType,
+};

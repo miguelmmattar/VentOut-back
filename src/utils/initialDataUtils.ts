@@ -4,7 +4,7 @@ import { Emotions, Spots, Symptoms } from "@prisma/client";
 function handleSymptomData(symptoms: (Symptoms & {Spots: Spots;})[]): InitialSymptomData[] {
     return symptoms.map(item => ({
         value: item.id,
-        name: item.name,
+        label: item.name,
         type: item.type,
         spotId: item.spotId,
         color: item.Spots.color,
@@ -14,7 +14,7 @@ function handleSymptomData(symptoms: (Symptoms & {Spots: Spots;})[]): InitialSym
 function handleEmotionData(emotions: Emotions[]): InitialEmotionData[] {
     return emotions.map(item => ({
         value: item.id,
-        name: item.name,
+        label: item.name,
         color: item.color,
     }));
 }

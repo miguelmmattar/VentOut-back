@@ -7,8 +7,21 @@ async function findAll() {
     return emotions;
 }
 
+async function createEmotion(emotionId: number, reportId: number): Promise<MyEmotions> {
+    const newEmotion = await prisma.myEmotions.create({
+        data: {
+            emotionId,
+            reportId,
+            updatedAt: new Date(),
+        }
+    });
+
+    return newEmotion;
+}
+
 const emotionRepository = {
     findAll,
+    createEmotion,
 };
 
 export default emotionRepository;

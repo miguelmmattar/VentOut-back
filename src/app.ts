@@ -13,6 +13,7 @@ import {
   authenticationRouter,
   moodRouter,
   initialDataRouter,
+  reportRouter,
 } from "@/routers";
 
 const app = express();
@@ -23,7 +24,8 @@ app
   .use(handleApplicationErrors)
   .use("/auth", authenticationRouter)
   .use("/moods", moodRouter)
-  .use("/initial-data", initialDataRouter);
+  .use("/initial-data", initialDataRouter)
+  .use("/report", reportRouter);
 
 export function init(): Promise<Express> {
   connectDb();
