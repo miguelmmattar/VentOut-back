@@ -1,6 +1,7 @@
 import { InitialEmotionData, InitialSymptomData } from "@/services/data-service";
 import { Emotions, MyEmotions, MyReports, MySymptoms, Spots, Symptoms } from "@prisma/client";
 import { number, string } from "joi";
+import { getWeekDay } from "./date-utils";
 
 function handleSymptomData(symptoms: (Symptoms & {Spots: Spots;})[]): InitialSymptomData[] {
     return symptoms.map(item => ({
@@ -20,10 +21,11 @@ function handleEmotionData(emotions: Emotions[]): InitialEmotionData[] {
     }));
 }
 
-function concatData(emotions: FilteredEmotions[], symptoms:FilteredSymptoms[]) {
+function concatData(emotions: FilteredEmotions[], symptoms:FilteredSymptoms[]): ConcatedData {
     let result: ConcatedData = {
         symptoms: [],
         emotions: [],
+        week: [],
     };
 
     emotions.forEach((item) => {
@@ -33,6 +35,16 @@ function concatData(emotions: FilteredEmotions[], symptoms:FilteredSymptoms[]) {
                 color: item.color,
                 value: item.MyEmotions.length,
             })
+        }
+    });
+
+    emotions.forEach((item) => {
+        if (item.MyEmotions.length > 0) {
+            result.week.push({
+                name: item.name,
+                color: item.color,
+                value: sortEmotionsByDay(item.MyEmotions),
+                });
         }
     });
 
@@ -48,15 +60,28 @@ function concatData(emotions: FilteredEmotions[], symptoms:FilteredSymptoms[]) {
     return result;
 }
 
+function sortEmotionsByDay(reports: { MyReports: MyReports }[]) {
+    let reportDays = [0, 0, 0, 0, 0, 0, 0];
+    reports.forEach((report) => {
+        
+        const i = getWeekDay(report.MyReports.date);                   
+        reportDays[i] ++;
+        return reportDays;
+    });
+    
+    return reportDays;
+}
+
 export type ConcatedData = {
     symptoms: FilteredData[],
     emotions: FilteredData[],
+    week?: FilteredData[],
 }
 
 type FilteredData = {
     name: string,
     color: string,
-    value: number,
+    value: number | number[],
 };
 
 export type FilteredEmotions = {

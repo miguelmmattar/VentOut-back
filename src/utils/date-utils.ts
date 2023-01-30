@@ -48,7 +48,12 @@ function callFilter(filter: DateFilter) {
     return result;
 }
 
+function getWeekDay(date: Date | string) {
+    return new Date(date).getDay();
+}
+
 export {
     filters,
     callFilter,
+    getWeekDay,
 }
