@@ -1,4 +1,4 @@
-import { MoodFilter } from "@/protocols";
+import { DateFilter } from "@/protocols";
 import moodRepository from "@/repositories/mood-repository";
 import { Moods, MyMoods } from "@prisma/client";
 
@@ -24,7 +24,7 @@ export type MoodParams = Pick<MyMoods, "userId" | "updatedAt">;
 
 export type TodaysMoodParams = {
     userId: number,
-    filter: MoodFilter,
+    filter: DateFilter,
 }
 
 export type UpsertMoodParams ={

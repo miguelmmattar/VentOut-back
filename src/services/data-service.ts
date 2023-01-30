@@ -1,9 +1,10 @@
 import { notFoundError } from "@/errors";
+import { DateFilter } from "@/protocols";
 import emotionRepository from "@/repositories/emotion-repository";
+import reportRepository from "@/repositories/report-repository";
 import symptomRepository from "@/repositories/symptom-repository";
-import { Emotions, SymptomType } from "@prisma/client";
-import initialDataUtils from '../utils/initialDataUtils';
-
+import { SymptomType } from "@prisma/client";
+import dataUtils from '../utils/data-utils';
 
 async function loadInitialData(): Promise<InitialData> {
     try {
@@ -16,9 +17,9 @@ async function loadInitialData(): Promise<InitialData> {
         }
 
         let result = {
-            emotions: initialDataUtils.handleEmotionData(emotions),
-            physicalSymptoms: initialDataUtils.handleSymptomData(physicalSymptoms),
-            emotionalSymptoms: initialDataUtils.handleSymptomData(emotionalSymptoms),
+            emotions: dataUtils.handleEmotionData(emotions),
+            physicalSymptoms: dataUtils.handleSymptomData(physicalSymptoms),
+            emotionalSymptoms: dataUtils.handleSymptomData(emotionalSymptoms),
         }
 
         return result;
@@ -26,6 +27,16 @@ async function loadInitialData(): Promise<InitialData> {
     } catch (error) {
         throw notFoundError();
     }    
+}
+
+async function loadFilteredData(userId: number, filter: DateFilter) {
+    //const data = await reportRepository.findFiltered(userId, filter);
+    const emotions = await emotionRepository.findFiltered(userId, filter);
+    const symptoms = await symptomRepository.findFiltered(userId, filter);
+   
+    const filteredData = dataUtils.concatData(emotions, symptoms);
+
+    return filteredData;
 }
 
 export type InitialData = {
@@ -48,8 +59,9 @@ export type InitialEmotionData = {
     color: string,
 };
 
-const initialDataService = {
+const dataService = {
     loadInitialData,
+    loadFilteredData,
 };
 
-export default initialDataService;
+export default dataService;

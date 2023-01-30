@@ -1,4 +1,4 @@
-import { MoodFilter } from "@/protocols";
+import { DateFilter } from "@/protocols";
 
 const filters = {
     day: 'day',
@@ -37,7 +37,7 @@ function filterByYear(date: string | Date) {
     return `${year}-1-1`;
 }
 
-function callFilter(filter: MoodFilter) {
+function callFilter(filter: DateFilter) {
     let result: string;
 
     if(filter.param === filters.day) result = filterByDay(filter.date);

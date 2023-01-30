@@ -12,7 +12,7 @@ import { handleApplicationErrors } from "@/middlewares";
 import {
   authenticationRouter,
   moodRouter,
-  initialDataRouter,
+  dataRouter,
   reportRouter,
 } from "@/routers";
 
@@ -24,7 +24,7 @@ app
   .use(handleApplicationErrors)
   .use("/auth", authenticationRouter)
   .use("/moods", moodRouter)
-  .use("/initial-data", initialDataRouter)
+  .use("/data", dataRouter)
   .use("/report", reportRouter);
 
 export function init(): Promise<Express> {

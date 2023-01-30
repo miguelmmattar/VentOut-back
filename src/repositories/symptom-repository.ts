@@ -1,4 +1,6 @@
 import { prisma } from "@/config";
+import { DateFilter } from "@/protocols";
+import { callFilter } from "@/utils/date-utils";
 import { MySymptoms, Symptoms, SymptomType } from "@prisma/client";
 
 async function findAllPhysical() {
@@ -39,10 +41,39 @@ async function createSymptom(symptomId: number, reportId: number): Promise<MySym
     return newSymptom;
 }
 
+async function findFiltered(userId: number, filter: DateFilter) {
+    const filteredSymptoms = await prisma.spots.findMany({
+        orderBy: [{
+            id: 'desc',
+        }],
+        select: {
+            color: true,
+            name: true,
+            Symptoms: {
+                select: {
+                    MySymptoms: {
+                        where: {
+                            MyReports: {
+                                userId,
+                                date: {
+                                    gte: new Date(callFilter(filter)),
+                                }
+                            }
+                        }
+                    }
+                },
+            }
+        }
+    });
+
+    return filteredSymptoms;
+}
+
 const symptomRepository = {
     findAllPhysical,
     findAllEmotional,
     createSymptom,
+    findFiltered,
 };
 
 export default symptomRepository;

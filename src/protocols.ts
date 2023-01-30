@@ -29,7 +29,7 @@ export type LogoutParams = {
   userId: number,
 };
 
-export type MoodFilter = {
+export type DateFilter = {
   date: Date | string,
   param: string,
 }

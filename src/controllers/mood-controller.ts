@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 
 import moodService, { UpsertMoodParams } from "@/services/mood-service";
-import { MoodFilter } from "@/protocols";
+import { DateFilter } from "@/protocols";
 
 export async function getTodaysMood(req: Request, res: Response) {
     const { userId } = res.locals;
@@ -12,7 +12,7 @@ export async function getTodaysMood(req: Request, res: Response) {
         return res.status(httpStatus.BAD_REQUEST).send({});
     }
 
-    const filter: MoodFilter = {
+    const filter: DateFilter = {
         date: new Date(filterDate),
         param: filterParam,
     }

@@ -1,5 +1,8 @@
 import { prisma } from "@/config";
+import { DateFilter } from "@/protocols";
+import { callFilter } from "@/utils/date-utils";
 import { MyEmotions, Emotions } from "@prisma/client";
+import { date } from "joi";
 
 async function findAll() {
     const emotions = await prisma.emotions.findMany({});
@@ -19,9 +22,35 @@ async function createEmotion(emotionId: number, reportId: number): Promise<MyEmo
     return newEmotion;
 }
 
+async function findFiltered(userId: number, filter: DateFilter) {
+    const filteredEmotions = await prisma.emotions.findMany({
+        select: {
+            color: true,
+            name: true,
+            MyEmotions: {
+                select: {
+                    MyReports: true,
+                },
+                where: {
+                    MyReports: {
+                        userId,
+                        date: {
+                            gte: new Date(callFilter(filter)),
+                        }
+                    },
+                    
+                }
+            }
+        }
+    });
+
+    return filteredEmotions;
+}
+
 const emotionRepository = {
     findAll,
     createEmotion,
+    findFiltered,
 };
 
 export default emotionRepository;

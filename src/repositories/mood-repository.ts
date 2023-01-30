@@ -1,8 +1,8 @@
 import { prisma } from "@/config";
 import { invalidDataError } from "@/errors";
-import { MoodFilter } from "@/protocols";
+import { DateFilter } from "@/protocols";
 import { MoodParams } from "@/services/mood-service";
-import { callFilter, filters } from "@/utils/moodUtils";
+import { callFilter, filters } from "@/utils/date-utils";
 import { MyMoods } from "@prisma/client";
  
 async function findByUserId(userId: number) {
@@ -17,7 +17,7 @@ async function findByUserId(userId: number) {
     return userMoods;
 }
 
-async function findFiltered(userId: number, filter: MoodFilter) {    
+async function findFiltered(userId: number, filter: DateFilter) {    
     const filterdMoods = await prisma.myMoods.findMany({
         where: {
             userId,
