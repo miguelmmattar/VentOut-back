@@ -1,7 +1,7 @@
 import { prisma } from "@/config";
 import { DateFilter } from "@/protocols";
 
-import { ReportParams } from "@/services/report-service";
+import { ReportParams, ReportsList } from "@/services/report-service";
 import { callFilter } from "@/utils/date-utils";
 import { MyEmotions, MyReports, MySymptoms } from "@prisma/client";
 
@@ -18,39 +18,54 @@ async function createReport(date: Date, text: string, userId: number): Promise<n
     return newReport?.id;
 }
 
-async function findFiltered(userId: number, filter: DateFilter): Promise<MyReports[]> {
-    const filteredReports = await prisma.myReports.findMany({
+async function findUserReports(userId: number): Promise<ReportsList> {
+    const userReports = await prisma.myReports.findMany({
         orderBy: [
             {
               date: 'desc',
             },
         ],
+        select: {
+            id: true,
+            date: true,
+        },
         where: {
             userId,
-            date: {
-                gte: new Date(callFilter(filter)),
-            }
+        }, 
+    });
+
+    return userReports;
+}
+
+async function findById(reportId: number): Promise<MyReports> {
+    const myReport = prisma.myReports.findUnique({
+        where: {
+            id: reportId,
         }, include: {
             MyEmotions: {
                 include: {
                     Emotions: true,
                 },
-            },
-                  
+            },      
             MySymptoms: {
                 include: {
-                    Symptoms: true,
+                    Symptoms: {
+                        include: {
+                            Spots: true
+                        }
+                    },
                 },
             }    
         }
     });
 
-    return filteredReports;
+    return myReport;
 }
 
 const reportRepository = {
     createReport,
-    findFiltered,
+    findUserReports,
+    findById,
 };
 
 export default reportRepository;

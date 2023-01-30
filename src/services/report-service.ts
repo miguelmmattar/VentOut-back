@@ -1,9 +1,9 @@
-import { invalidDataError, requestError } from "@/errors";
+import { invalidDataError, notFoundError, requestError } from "@/errors";
 import { incomingEmotion, incomingSymptom } from "@/protocols";
 import emotionRepository from "@/repositories/emotion-repository";
 import reportRepository from "@/repositories/report-repository";
 import symptomRepository from "@/repositories/symptom-repository";
-import { Emotions, Symptoms } from "@prisma/client";
+import { Emotions, MyReports, Symptoms } from "@prisma/client";
 import httpStatus from "http-status";
 
 async function createNewReport(params: ReportParams, userId: number) {
@@ -26,6 +26,17 @@ async function createNewReport(params: ReportParams, userId: number) {
     }
 }
 
+async function loadUserReports(userId: number): Promise<ReportsList> {
+    const userReports = await reportRepository.findUserReports(userId);
+
+    if(!userReports) {
+        throw notFoundError;
+    }
+
+    return userReports;
+}
+
+export type ReportsList = Pick<MyReports, "id" | "date">[];
 
 export type ReportParams = {
     date: Date | string,
@@ -36,6 +47,7 @@ export type ReportParams = {
 
 const reportService = {
     createNewReport,
+    loadUserReports,
 };
 
 export default reportService;

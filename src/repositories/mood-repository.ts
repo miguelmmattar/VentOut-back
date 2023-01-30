@@ -9,7 +9,8 @@ async function findByUserId(userId: number) {
     const userMoods = await prisma.myMoods.findMany({
         where: {
             userId,
-        }, include: {
+        },
+        include: {
             Moods: true,
         }
     });

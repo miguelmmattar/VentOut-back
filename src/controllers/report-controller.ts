@@ -19,3 +19,20 @@ export async function postReport(req: Request, res: Response) {
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({});
     }
 }
+
+export async function getUserReports(req: Request, res: Response) {
+    const { userId } = res.locals;
+
+    if(!userId) {
+        return res.status(httpStatus.BAD_REQUEST).send({});
+    }
+
+    try {
+        const result = await reportService.loadUserReports(userId);
+
+        return res.status(httpStatus.OK).send(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(httpStatus.NOT_FOUND).send({});
+    }
+}

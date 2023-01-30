@@ -26,6 +26,22 @@ export async function getTodaysMood(req: Request, res: Response) {
     }
 }
 
+export async function getUserMoods(req: Request, res: Response) {
+    const { userId } = res.locals;
+
+    if(!userId) {
+        return res.status(httpStatus.BAD_REQUEST).send({});
+    }
+
+    try {
+        const result = await moodService.findUserMoods(userId);
+
+        return res.status(httpStatus.OK).send(result);
+    } catch (error) {
+        return res.status(httpStatus.NOT_FOUND).send({});
+    }    
+}
+
 export async function createOrUpdateMood(req: Request, res: Response) {
     let { newMood, name } = req.body as UpsertMoodParams;
     const { userId } = res.locals;

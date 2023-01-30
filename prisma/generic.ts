@@ -1,5 +1,5 @@
 import { SymptomType, PrismaClient } from "@prisma/client";
-import initialData from "../src/prismaUtils/initialData";
+import initialData from "./initialData";
 const prisma = new PrismaClient();
 
 async function seedMoods() {
