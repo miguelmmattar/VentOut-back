@@ -37,27 +37,42 @@ async function findUserReports(userId: number): Promise<ReportsList> {
     return userReports;
 }
 
-async function findById(reportId: number): Promise<MyReports> {
-    const myReport = prisma.myReports.findUnique({
+async function findById(reportId: number, userId: number) {
+    const myReport = await prisma.myReports.findFirst({
         where: {
             id: reportId,
-        }, include: {
+            userId,
+        },
+        select: {
+            date: true,
+            text: true,
             MyEmotions: {
-                include: {
-                    Emotions: true,
-                },
-            },      
-            MySymptoms: {
-                include: {
-                    Symptoms: {
-                        include: {
-                            Spots: true
+                select: {
+                    Emotions: {
+                        select: {
+                            name: true,
+                            color: true,
                         }
-                    },
-                },
-            }    
+                    }
+                }
+            },
+            MySymptoms: {
+                select: {
+                    Symptoms: {
+                        select: {
+                            name: true,
+                            type: true,
+                            Spots: {
+                                select: {
+                                    color: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-    });
+    })
 
     return myReport;
 }

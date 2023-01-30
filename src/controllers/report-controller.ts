@@ -36,3 +36,21 @@ export async function getUserReports(req: Request, res: Response) {
         return res.status(httpStatus.NOT_FOUND).send({});
     }
 }
+
+export async function getReportById(req: Request, res: Response) {
+    const reportId = Number(req.params.reportId);
+    const { userId } = res.locals;
+
+    if(!userId || !reportId || isNaN(reportId)) {
+        return res.status(httpStatus.BAD_REQUEST).send({});
+    }
+
+    try {
+        const result = await reportService.loadById(reportId, userId);
+
+        return res.status(httpStatus.OK).send(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(httpStatus.NOT_FOUND).send({});
+    }
+}
