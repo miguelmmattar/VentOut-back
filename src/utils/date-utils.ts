@@ -5,6 +5,7 @@ const filters = {
     week: 'week',
     month: 'month',
     year: 'year',
+    allTime: 'all time',
 };
 
 function filterByDay(date: string | Date) {
@@ -44,6 +45,7 @@ function callFilter(filter: DateFilter) {
     if(filter.param === filters.week) result = filterByWeek(filter.date);
     if(filter.param === filters.month) result = filterByMonth(filter.date);
     if(filter.param === filters.year) result = filterByYear(filter.date);
+    if(filter.param === filters.allTime) result = (new Date(0)).toString();
 
     return result;
 }
