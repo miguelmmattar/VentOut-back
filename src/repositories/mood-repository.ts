@@ -6,88 +6,88 @@ import { callFilter, filters } from "@/utils/date-utils";
 import { MyMoods } from "@prisma/client";
  
 async function findByUserId(userId: number) {
-    const userMoods = await prisma.myMoods.findMany({
-        where: {
-            userId,
-        },
-        include: {
-            Moods: true,
-        }
-    });
+  const userMoods = await prisma.myMoods.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      Moods: true,
+    }
+  });
 
-    return userMoods;
+  return userMoods;
 }
 
 async function findFiltered(userId: number, filter: DateFilter) {    
-    const filterdMoods = await prisma.myMoods.findMany({
-        where: {
-            userId,
-            createdAt: {
-                gte: new Date(callFilter(filter)),
-            }
-        }, include: {
-            Moods: true,
-        }
-    });
+  const filteredMoods = await prisma.myMoods.findMany({
+    where: {
+      userId,
+      createdAt: {
+        gte: new Date(callFilter(filter)),
+      }
+    }, include: {
+      Moods: true,
+    }
+  });
     
-    return filterdMoods;
+  return filteredMoods;
 }
 
 async function upsert(newMood: MoodParams, name: string) {
-    let previousMoodId: number | undefined = undefined;
-    let result: MyMoods;
+  const previousMoodId: number | undefined = undefined;
+  let result: MyMoods;
 
-    await prisma.$transaction(async (tx) => {
-        const { id } = await prisma.moods.findFirst({
-            where: {
-                name,
-            },
-            select: {
-                id: true,
-            }
-        });
-
-        if(!id) {
-            throw invalidDataError();
-        }
-    
-        const todayMood = await prisma.myMoods.findFirst({
-            where: {
-                userId: newMood.userId,
-                createdAt: {
-                    gte: new Date(callFilter({date: newMood.updatedAt, param: filters.day})),   
-                }
-            }
-        });
-
-        if(todayMood) {
-            result = await prisma.myMoods.update({
-                where: {
-                    id: todayMood.id,
-                },
-                data: {
-                    moodId: id,
-                    updatedAt: new Date(),
-                }
-            });
-        } else {
-            result = await prisma.myMoods.create({
-                data: {
-                    userId: newMood.userId,
-                    moodId: id,
-                    updatedAt: new Date(),
-                }
-            });
-        }
+  await prisma.$transaction(async (tx) => {
+    const { id } = await prisma.moods.findFirst({
+      where: {
+        name,
+      },
+      select: {
+        id: true,
+      }
     });
+
+    if(!id) {
+      throw invalidDataError();
+    }
     
-    return result;
+    const todayMood = await prisma.myMoods.findFirst({
+      where: {
+        userId: newMood.userId,
+        createdAt: {
+          gte: new Date(callFilter({ date: newMood.updatedAt, param: filters.day })),   
+        }
+      }
+    });
+
+    if(todayMood) {
+      result = await prisma.myMoods.update({
+        where: {
+          id: todayMood.id,
+        },
+        data: {
+          moodId: id,
+          updatedAt: new Date(),
+        } 
+      });
+    } else {
+      result = await prisma.myMoods.create({
+        data: {
+          userId: newMood.userId,
+          moodId: id,
+          updatedAt: new Date(),
+        }
+      });
+    }
+  });
+    
+  return result;
 }
 
 const moodRepository = {
-    findByUserId,
-    findFiltered,
-    upsert,
+  findByUserId,
+  findFiltered,
+  upsert,
 };
 
 export default moodRepository;

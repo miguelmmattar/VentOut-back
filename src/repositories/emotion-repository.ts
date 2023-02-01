@@ -5,52 +5,52 @@ import { MyEmotions, Emotions } from "@prisma/client";
 import { date } from "joi";
 
 async function findAll() {
-    const emotions = await prisma.emotions.findMany({});
+  const emotions = await prisma.emotions.findMany({});
 
-    return emotions;
+  return emotions;
 }
 
 async function createEmotion(emotionId: number, reportId: number): Promise<MyEmotions> {
-    const newEmotion = await prisma.myEmotions.create({
-        data: {
-            emotionId,
-            reportId,
-            updatedAt: new Date(),
-        }
-    });
+  const newEmotion = await prisma.myEmotions.create({
+    data: {
+      emotionId,
+      reportId,
+      updatedAt: new Date(),
+    }
+  });
 
-    return newEmotion;
+  return newEmotion;
 }
 
 async function findFiltered(userId: number, filter: DateFilter) {
-    const filteredEmotions = await prisma.emotions.findMany({
+  const filteredEmotions = await prisma.emotions.findMany({
+    select: {
+      color: true,
+      name: true,
+      MyEmotions: {
         select: {
-            color: true,
-            name: true,
-            MyEmotions: {
-                select: {
-                    MyReports: true,
-                },
-                where: {
-                    MyReports: {
-                        userId,
-                        date: {
-                            gte: new Date(callFilter(filter)),
-                        }
-                    },
-                    
-                }
+          MyReports: true,
+        },
+        where: {
+          MyReports: {
+            userId,
+            date: {
+              gte: new Date(callFilter(filter)),
             }
+          },
+                    
         }
-    });
+      }
+    }
+  });
 
-    return filteredEmotions;
+  return filteredEmotions;
 }
 
 const emotionRepository = {
-    findAll,
-    createEmotion,
-    findFiltered,
+  findAll,
+  createEmotion,
+  findFiltered,
 };
 
 export default emotionRepository;

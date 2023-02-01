@@ -1,40 +1,40 @@
 import { notFoundError } from "@/errors";
 import { DateFilter } from "@/protocols";
 import moodRepository from "@/repositories/mood-repository";
-import { Moods, MyMoods } from "@prisma/client";
+import { Moods, MyMoods } from "@prisma/client"; 
 
 async function findTodaysMood(params: TodaysMoodParams): Promise<Moods> {
-    const { userId, filter } = params;
+  const { userId, filter } = params;
   
-    const moods = await moodRepository.findFiltered(userId, filter);
+  const moods = await moodRepository.findFiltered(userId, filter);
     
-    if(!moods[0]) {
-        return;
-    }
+  if(!moods[0]) {
+    return;
+  }
 
-    return moods[0].Moods;
+  return moods[0].Moods;
 }
 
 async function findUserMoods(userId: number): Promise<UserMoods[]> {  
-    const moods = await moodRepository.findByUserId(userId);
+  const moods = await moodRepository.findByUserId(userId);
 
-    if(!moods) {
-        throw notFoundError();
-    }
+  if(!moods) {
+    throw notFoundError();
+  }
 
-    let result: UserMoods[] = moods.map((mood) => ({
-        mood: mood.Moods.name,
-        color: mood.Moods.color,
-        date: mood.createdAt
-    }));
+  const result: UserMoods[] = moods.map((mood) => ({
+    mood: mood.Moods.name,
+    color: mood.Moods.color,
+    date: mood.createdAt
+  }));
 
-    return result;
+  return result;
 }
 
 async function upsertMood(params: UpsertMoodParams) {
-    const { newMood, name } = params;
+  const { newMood, name } = params;
 
-    await moodRepository.upsert(newMood, name);
+  await moodRepository.upsert(newMood, name);
 }
 
 export type MoodParams = Pick<MyMoods, "userId" | "updatedAt">;
@@ -56,9 +56,9 @@ export type UserMoods = {
 }
 
 const moodService = {
-    findTodaysMood,
-    upsertMood,
-    findUserMoods,
+  findTodaysMood,
+  upsertMood,
+  findUserMoods,
 };
 
 export default moodService;

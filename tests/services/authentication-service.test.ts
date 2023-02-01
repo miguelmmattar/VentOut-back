@@ -5,7 +5,7 @@ import { prisma } from "@/config";
 import { invalidCredentialsError } from "@/errors";
 import authenticationService from "@/services/authentication-service";
 
-import { createUser } from "../factories"
+import { createUser } from "../factories";
 import { cleanDb, generateValidToken } from "../helpers";
 
 beforeAll(async () => {

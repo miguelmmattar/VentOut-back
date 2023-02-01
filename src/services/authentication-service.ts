@@ -48,26 +48,26 @@ async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
 }
 
 async function checkNewUserOrFail(email: string) {
-    const user = await authenticationRepository.findByEmail(email);
-    if (user) throw invalidCredentialsError();
+  const user = await authenticationRepository.findByEmail(email);
+  if (user) throw invalidCredentialsError();
 }
 
 async function createUser(email: string, name: string) {
-    const newUser = await authenticationRepository.createUser({
-        name,
-        email,
-        updatedAt: dayjs().toDate(),
-    });
-    return newUser;
+  const newUser = await authenticationRepository.createUser({
+    name,
+    email,
+    updatedAt: dayjs().toDate(),
+  });
+  return newUser;
 }
 
 async function createSession(userId: number, token: string) {
-    const newSession = await authenticationRepository.createSession({
-        userId,
-        token,
-    });
+  const newSession = await authenticationRepository.createSession({
+    userId,
+    token,
+  });
 
-    return newSession;
+  return newSession;
 }
 
 export type SignUpParams = Pick<User, "email" | "name">;
@@ -85,10 +85,10 @@ type SignUpResult = Pick<User, "id" | "email" | "name">;
   
 type GetUserOrFailResult = Pick<User, "id" | "email" | "name">;
   
- const authenticationService = {
-    signUp,
-    signIn,
-    signOut,
+const authenticationService = {
+  signUp,
+  signIn,
+  signOut,
 };
   
 export default authenticationService;

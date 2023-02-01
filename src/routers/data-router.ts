@@ -6,8 +6,8 @@ import { authenticateToken } from "@/middlewares";
 const dataRouter = Router();
 
 dataRouter
-    .all("/*", authenticateToken)
-    .get("", getInitialData)
-    .get("/filter", getFilteredData);
+  .all("/*", authenticateToken)
+  .get("", getInitialData)
+  .get("/filter", getFilteredData);
 
-export { dataRouter };
+export { dataRouter }; 

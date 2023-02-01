@@ -33,7 +33,7 @@ export function init(): Promise<Express> {
 }
 
 export async function close(): Promise<void> {
-    await disconnectDB();
-  }
+  await disconnectDB();
+}
   
 export default app;

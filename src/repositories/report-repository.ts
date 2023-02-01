@@ -6,81 +6,81 @@ import { callFilter } from "@/utils/date-utils";
 import { MyEmotions, MyReports, MySymptoms } from "@prisma/client";
 
 async function createReport(date: Date, text: string, userId: number): Promise<number> {
-    const newReport = await prisma.myReports.create({
-        data: {
-            userId,
-            date,
-            text,
-            updatedAt: new Date(),
-        }
-    });
+  const newReport = await prisma.myReports.create({
+    data: {
+      userId,
+      date,
+      text,
+      updatedAt: new Date(),
+    }
+  });
 
-    return newReport?.id;
+  return newReport?.id;
 }
 
 async function findUserReports(userId: number): Promise<ReportsList> {
-    const userReports = await prisma.myReports.findMany({
-        orderBy: [
-            {
-              date: 'desc',
-            },
-        ],
-        select: {
-            id: true,
-            date: true,
-        },
-        where: {
-            userId,
-        }, 
-    });
+  const userReports = await prisma.myReports.findMany({
+    orderBy: [
+      {
+        date: "desc",
+      },
+    ],
+    select: {
+      id: true,
+      date: true,
+    },
+    where: {
+      userId,
+    }, 
+  });
 
-    return userReports;
+  return userReports;
 }
 
 async function findById(reportId: number, userId: number) {
-    const myReport = await prisma.myReports.findFirst({
-        where: {
-            id: reportId,
-            userId,
-        },
+  const myReport = await prisma.myReports.findFirst({
+    where: {
+      id: reportId,
+      userId,
+    },
+    select: {
+      date: true,
+      text: true,
+      MyEmotions: {
         select: {
-            date: true,
-            text: true,
-            MyEmotions: {
-                select: {
-                    Emotions: {
-                        select: {
-                            name: true,
-                            color: true,
-                        }
-                    }
-                }
-            },
-            MySymptoms: {
-                select: {
-                    Symptoms: {
-                        select: {
-                            name: true,
-                            type: true,
-                            Spots: {
-                                select: {
-                                    color: true,
-                                }
-                            }
-                        }
-                    }
-                }
+          Emotions: {
+            select: {
+              name: true,
+              color: true,
             }
+          }
         }
-    })
+      },
+      MySymptoms: {
+        select: {
+          Symptoms: {
+            select: {
+              name: true,
+              type: true,
+              Spots: {
+                select: {
+                  color: true,
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
 
-    return myReport;
+  return myReport;
 }
 
 const reportRepository = {
-    createReport,
-    findUserReports,
-    findById,
+  createReport,
+  findUserReports,
+  findById,
 };
 
 export default reportRepository;

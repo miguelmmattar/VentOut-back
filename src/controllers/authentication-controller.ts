@@ -35,8 +35,12 @@ export async function singUpPost(req: Request, res: Response) {
   }
 }
 
-export async function signOutPut(req: Request, res: Response) {
+export async function signOut(req: Request, res: Response) {
   const userId = Number(req.params.userId);
+
+  if(!userId || isNaN(userId)) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
 
   try {
     await authenticationService.signOut(userId);

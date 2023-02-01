@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 
 import { Prisma, Session } from "@prisma/client";
 import { NewSessionParams, NewUserParams } from "@/services/authentication-service";
-;
 
 async function findByEmail(email: string) {
   const user: Prisma.UserFindUniqueArgs = {

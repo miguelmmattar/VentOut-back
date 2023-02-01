@@ -1,7 +1,6 @@
 import app, { init } from "@/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
-import { number } from "joi";
 import supertest from "supertest";
 import { createSession, createUser } from "../factories";
 import { cleanDb, generateValidToken } from "../helpers";
@@ -123,22 +122,22 @@ describe("POST /auth/sign-up", () => {
   });
 });
 
-describe("PUT /auth/sign-out", () => {
-  it("should respond with status 400 when body is not given", async () => {
-    const response = await server.put("/auth/sign-out");
+describe("DELETE /auth/sign-out", () => {
+  it("should respond with status 404 when user id is not given", async () => {
+    const response = await server.delete("/auth/sign-out");
 
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 
-  it("should respond with status 400 when body is not valid", async () => {
+  it("should respond with status 400 when user id is not valid", async () => {
     const invalidBody = { [faker.lorem.word()]: faker.lorem.word() };
 
-    const response = await server.put("/auth/sign-out").send(invalidBody);
+    const response = await server.delete("/auth/sign-out/NaN").send(invalidBody);
 
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
   });
 
-  describe("when body is valid", () => {
+  describe("when user id is valid", () => {
     const generateValidUserParams = async () => ({
       email: faker.internet.email(),
       name: faker.name.fullName(),
@@ -154,7 +153,7 @@ describe("PUT /auth/sign-out", () => {
       const user = await createUser(userBody);
       const invalidUserId = user.id + 1;
 
-      const response = await server.put("/auth/sign-out").send({userId: invalidUserId});
+      const response = await server.delete(`/auth/sign-out/${invalidUserId}`);
   
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
@@ -165,7 +164,7 @@ describe("PUT /auth/sign-out", () => {
       const sessionBody = await generateValidSessionParams(user.email);
       await createSession(sessionBody.token, user.id);
 
-      const response = await server.put("/auth/sign-out").send({userId: user.id});
+      const response = await server.delete(`/auth/sign-out/${user.id}`);
 
       expect(response.status).toBe(httpStatus.OK);
     });

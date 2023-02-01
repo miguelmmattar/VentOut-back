@@ -84,20 +84,9 @@ async function seedSymptoms() {
     console.log({ symptoms });
 }
 
-const spotId = {
-    root: 1,
-    sacral: 2,
-    solarPlexus: 3,
-    heart: 4,
-    throat: 5,
-    front: 6,
-    crown: 7,
-}
-
 export default {
     seedMoods,
     seedSpots,
     seedEmotions,
     seedSymptoms,
-    spotId,
 };

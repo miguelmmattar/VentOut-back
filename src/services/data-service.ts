@@ -4,39 +4,37 @@ import emotionRepository from "@/repositories/emotion-repository";
 import reportRepository from "@/repositories/report-repository";
 import symptomRepository from "@/repositories/symptom-repository";
 import { SymptomType } from "@prisma/client";
-import dataUtils from '../utils/data-utils';
+import dataUtils from "../utils/data-utils";
 
 async function loadInitialData(): Promise<InitialData> {
-    try {
-        const emotions = await emotionRepository.findAll();
-        const physicalSymptoms = await symptomRepository.findAllPhysical();
-        const emotionalSymptoms = await symptomRepository.findAllEmotional();
+  try {
+    const emotions = await emotionRepository.findAll();
+    const physicalSymptoms = await symptomRepository.findAllPhysical();
+    const emotionalSymptoms = await symptomRepository.findAllEmotional();
 
-        if( !emotions[0] || !physicalSymptoms[0] || !emotionalSymptoms[0]) {
-            throw notFoundError();
-        }
+    if( !emotions[0] || !physicalSymptoms[0] || !emotionalSymptoms[0]) {
+      throw notFoundError();
+    }
 
-        let result = {
-            emotions: dataUtils.handleEmotionData(emotions),
-            physicalSymptoms: dataUtils.handleSymptomData(physicalSymptoms),
-            emotionalSymptoms: dataUtils.handleSymptomData(emotionalSymptoms),
-        }
+    const result = {
+      emotions: dataUtils.handleEmotionData(emotions),
+      physicalSymptoms: dataUtils.handleSymptomData(physicalSymptoms),
+      emotionalSymptoms: dataUtils.handleSymptomData(emotionalSymptoms),
+    };
 
-        return result;
-
-    } catch (error) {
-        throw notFoundError();
-    }    
+    return result;
+  } catch (error) {
+    throw notFoundError();
+  }    
 }
 
 async function loadFilteredData(userId: number, filter: DateFilter) {
-    //const data = await reportRepository.findFiltered(userId, filter);
-    const emotions = await emotionRepository.findFiltered(userId, filter);
-    const symptoms = await symptomRepository.findFiltered(userId, filter);
+  const emotions = await emotionRepository.findFiltered(userId, filter);
+  const symptoms = await symptomRepository.findFiltered(userId, filter);
    
-    const filteredData = dataUtils.concatData(emotions, symptoms);
+  const filteredData = dataUtils.concatData(emotions, symptoms);
 
-    return filteredData;
+  return filteredData;
 }
 
 export type InitialData = {
@@ -60,8 +58,8 @@ export type InitialEmotionData = {
 };
 
 const dataService = {
-    loadInitialData,
-    loadFilteredData,
+  loadInitialData,
+  loadFilteredData,
 };
 
 export default dataService;
