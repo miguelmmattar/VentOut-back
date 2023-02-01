@@ -31,7 +31,7 @@ async function loadInitialData(): Promise<InitialData> {
 async function loadFilteredData(userId: number, filter: DateFilter) {
   const emotions = await emotionRepository.findFiltered(userId, filter);
   const symptoms = await symptomRepository.findFiltered(userId, filter);
-   
+  
   const filteredData = dataUtils.concatData(emotions, symptoms);
 
   return filteredData;

@@ -43,7 +43,7 @@ async function findFiltered(userId: number, filter: DateFilter) {
       }
     }
   });
-
+  
   return filteredEmotions;
 }
 

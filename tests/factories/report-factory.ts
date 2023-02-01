@@ -48,5 +48,30 @@ export async function createReport(userId: number) {
     }
   });
 
-  return report;
+  const newReport = await prisma.myReports.findUnique({
+    where: {
+      id: report.id,
+    }, include: {
+      MyEmotions: {
+        select: {
+          Emotions: true,
+        }
+      },
+      MySymptoms: {
+        orderBy: [{
+          createdAt: 'asc',
+        }],
+        select: {
+          Symptoms: {
+            select: {
+              name: true,
+              Spots: true,
+            }
+          },
+        }
+      },
+    }
+  });
+
+  return newReport;
 }

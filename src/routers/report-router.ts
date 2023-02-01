@@ -12,5 +12,5 @@ reportRouter
   .post("", validateBody(postReportSchema), postReport)
   .get("", getUserReports)
   .get("/:reportId", getReportById);
-
+ 
 export { reportRouter };

@@ -174,7 +174,7 @@ describe("GET /moods/history", () => {
         
       expect(response.status).toBe(httpStatus.OK);
 
-      expect((response.body.date)).toEqual(
+      expect(response.body).toEqual(
         [{
           date: (mood.createdAt).toISOString(),
           mood: mood.Moods.name, 
