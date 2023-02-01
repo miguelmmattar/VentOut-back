@@ -21,14 +21,15 @@ export async function postReport(req: Request, res: Response) {
 }
 
 export async function getUserReports(req: Request, res: Response) {
+  const offset = Number(req.query.offset);
   const { userId } = res.locals;
 
-  if(!userId) {
+  if(!userId || (!offset && offset !==0) || isNaN(offset)) {
     return res.status(httpStatus.BAD_REQUEST).send({});
   }
 
   try {
-    const result = await reportService.loadUserReports(userId);
+    const result = await reportService.loadUserReports(userId, offset);
 
     return res.status(httpStatus.OK).send(result);
   } catch (error) {

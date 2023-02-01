@@ -28,8 +28,8 @@ async function createNewReport(params: ReportParams, userId: number) {
   }
 }
 
-async function loadUserReports(userId: number): Promise<ReportsList> {
-  const userReports = await reportRepository.findUserReports(userId);
+async function loadUserReports(userId: number, offset: number): Promise<ReportsList> {
+  const userReports = await reportRepository.findUserReports(userId, offset);
 
   if(!userReports) {
     throw notFoundError;

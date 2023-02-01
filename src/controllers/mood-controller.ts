@@ -28,13 +28,14 @@ export async function getTodaysMood(req: Request, res: Response) {
 
 export async function getUserMoods(req: Request, res: Response) {
   const { userId } = res.locals;
+  const offset = Number(req.query.offset);
 
-  if(!userId) {
+  if(!userId || (!offset && offset !==0) || isNaN(offset)) {
     return res.status(httpStatus.BAD_REQUEST).send({});
   }
 
   try {
-    const result = await moodService.findUserMoods(userId);
+    const result = await moodService.findUserMoods(userId, offset);
 
     return res.status(httpStatus.OK).send(result);
   } catch (error) {

@@ -155,11 +155,27 @@ describe("GET /moods/history", () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
   
-  describe("when token is valid", () => {     
-    it("should respond with empty array when there are no moods reported", async () => {
+  describe("when token is valid", () => {
+    it("should respond with status 400 when no query param is passed", async () => {
       const token = await generateValidToken();
   
       const response = await server.get("/moods/history").set("Authorization", `Bearer ${token}`);
+  
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+    it("should respond with status 400 when given query param is not valid", async () => {
+      const token = await generateValidToken();
+  
+      const response = await server.get(`/moods/history?offset=NaN`).set("Authorization", `Bearer ${token}`);
+  
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+    it("should respond with empty array when there are no moods reported", async () => {
+      const token = await generateValidToken();
+  
+      const response = await server.get(`/moods/history?offset=0`).set("Authorization", `Bearer ${token}`);
   
       expect(response.body).toEqual([]);
     });
@@ -170,7 +186,7 @@ describe("GET /moods/history", () => {
       await createSession(token, user.id);
       const mood = await createMood(user.id);
       
-      const response = await server.get("/moods/history").set("Authorization", `Bearer ${token}`);
+      const response = await server.get(`/moods/history?offset=0`).set("Authorization", `Bearer ${token}`);
         
       expect(response.status).toBe(httpStatus.OK);
 

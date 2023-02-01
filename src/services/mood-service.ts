@@ -15,8 +15,8 @@ async function findTodaysMood(params: TodaysMoodParams): Promise<Moods> {
   return moods[0].Moods;
 }
 
-async function findUserMoods(userId: number): Promise<UserMoods[]> {  
-  const moods = await moodRepository.findByUserId(userId);
+async function findUserMoods(userId: number, offset: number): Promise<UserMoods[]> {  
+  const moods = await moodRepository.findByUserId(userId, offset);
 
   if(!moods) {
     throw notFoundError();
