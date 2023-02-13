@@ -8,7 +8,7 @@ import { MyMoods } from "@prisma/client";
 async function findByUserId(userId: number, skip: number) {
   const userMoods = await prisma.myMoods.findMany({
     skip,
-    take: 40,
+    take: 30,
     where: {
       userId,
     },
@@ -36,7 +36,6 @@ async function findFiltered(userId: number, filter: DateFilter) {
 }
 
 async function upsert(newMood: MoodParams, name: string) {
-  const previousMoodId: number | undefined = undefined;
   let result: MyMoods;
 
   await prisma.$transaction(async (tx) => {
